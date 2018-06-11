@@ -82,59 +82,6 @@ class TwigLexer extends \Twig_Lexer
         );
     }
 
-    public function tokenize($source, $name = null)
-    {
-        $this->source = $source;
-        $this->code = str_replace(array("\r\n", "\r"), "\n", $source->getCode());
-        $this->cursor = 0;
-        $this->lineno = 1;
-        $this->end = strlen($this->code);
-        $this->tokens = array();
-        $this->state = self::STATE_DATA;
-        $this->states = array();
-        $this->brackets = array();
-        $this->position = -1;
-
-        // find all token starts in one go
-        preg_match_all($this->regexes['lex_tokens_start'], $this->code, $matches, PREG_OFFSET_CAPTURE);
-        $this->positions = $matches;
-
-        while ($this->cursor < $this->end) {
-            // dispatch to the lexing functions depending
-            // on the current state
-            switch ($this->state) {
-                case self::STATE_DATA:
-                    $this->lexData();
-                    break;
-
-                case self::STATE_BLOCK:
-                    $this->lexBlock();
-                    break;
-
-                case self::STATE_VAR:
-                    $this->lexVar();
-                    break;
-
-                case self::STATE_STRING:
-                    $this->lexString();
-                    break;
-
-                case self::STATE_INTERPOLATION:
-                    $this->lexInterpolation();
-                    break;
-            }
-        }
-
-        $this->pushToken(\Twig_Token::EOF_TYPE);
-
-        if (!empty($this->brackets)) {
-            list($expect, $lineno) = array_pop($this->brackets);
-            throw new \Twig_Error_Syntax(sprintf('Unclosed "%s".', $expect), $lineno, $this->source);
-        }
-
-        return new \Twig_TokenStream($this->tokens, $this->source);
-    }
-
     protected function lexData()
     {
         // if no matches are left we return the rest of the template as simple text token
