@@ -281,7 +281,7 @@ class TwigLexer extends \Twig_Lexer
         }
     }
 
-    protected function lexRawData()
+    protected function lexRawData($tag)
     {
         if (!preg_match($this->regexes['lex_raw_data'], $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor)) {
             throw new \Twig_Error_Syntax('Unexpected end of file: Unclosed "verbatim" block.', $this->lineno, $this->source);
