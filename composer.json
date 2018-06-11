@@ -25,10 +25,7 @@
         }
     },
     "config": {
-        "bin-dir": "bin",
-        "platform" : {
-            "php" : "5.6.36"
-        }
+        "bin-dir": "bin"
     },
     "bin": [
         "bin/twigcs"
